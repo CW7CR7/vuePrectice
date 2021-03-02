@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="vueInside">
+        <!-- shu是自定义属性 后面的faMsg是父亲传递过来的值 -->
+        <button-c :shu=faMsg shu2=faMsg2></button-c>
+        <button-c :shu=faMsg :shu2=faMsg2></button-c>
+        <div-aa></div-aa>
+    </div>
+</body>
+<script src="./js/vue.js"></script>
+<script>
+    // 子组件
+    Vue.component('div-aa', {
+            data() {
+                return {
+
+                }
+            },
+            template: `<div>aaa</div>`,
+        })
+        // 第二个子组件
+    Vue.component('buttonC', {
+            data() {
+                return {
+
+                }
+            },
+            props: ['shu', 'shu2'],
+            // 子组件写上自定义属性名就能接受
+            template: `<div>
+                    <button @click=clickNum>{{shu}}{{typeof shu2}}</button>
+                </div>`,
+            methods: {
+                clickNum: function() {
+                    this.count++
+                }
+            },
+        })
+        // 上面注册了下面的实例才能使用
+    var vueShili = new Vue({
+        el: '#vueInside',
+        data() {
+            return {
+                faMsg: '父亲的话',
+                faMsg2:7,
+            }
+        },
+    });
+</script>
+
+</html>

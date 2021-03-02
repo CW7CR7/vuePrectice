@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v</title>
+    <style>
+        [v-cloak] {
+            /* 元素隐藏    */
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="vueInside">
+        <h1 v-cloak>{{content}}</h1>
+        <button v-on:click='dianji'>测试用的</button>
+        <button>自定义按键</button>
+        <input type="text" v-model='info' v-on:keyup='jianZhi'>
+        <input type="text" v-on:keydown.f5="ceshi()">
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script>
+    // 全局设置
+    Vue.config.keyCodes.f5 = 116;
+    var vm = new Vue({
+        el: '#vueInside',
+        data() {
+            return {
+                content: '略略略',
+                info:'',
+            }
+        },
+        methods: {
+            dianji: function () {
+                console.log(1);
+            },
+            jianZhi: function (e) {
+                console.log(e);
+            },
+            ceshi: function() {
+                alert('我是 F5！');
+            }
+        }
+    })
+</script>
+
+</html>

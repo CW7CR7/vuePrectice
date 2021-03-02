@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>验证输入框，因为是异步 用watch</title>
+    <style>
+        [v-cloak] {
+            /* 元素隐藏    */
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="vueInside">
+        <input type="text" v-model.lazy='username' placeholder="请输入用户名！">
+        <p v-cloak>{{tip}}</p>
+    </div>
+</body>
+<script src="./js/vue.js"></script>
+<script>
+    var vm = new Vue({
+        el: '#vueInside',
+        data() {
+            return {
+                username: '',
+                tip: 'tip',
+            }
+        },
+        methods: {
+            verification: function (val) {
+                // 定时器操作对象是windows
+                var that = this;
+                setTimeout(function () {
+                    if (val == 'admin') {
+                        that.tip = '不通过'
+                    } else {
+                        that.tip = '通过'
+                    }
+                }, 1000)
+            }
+        },
+        // 侦听器
+        watch: {
+            username: function (val) {
+                this.verification(val)
+                this.tip='正在验证'
+            },
+        }
+    })
+</script>
+
+</html>

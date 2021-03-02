@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>filter</title>
+</head>
+
+<body>
+    <div id='vueInside'>
+        <input type="text" v-model.lazy='msg'>
+        <p>{{msg|msgFilter}}</p>
+    </div>
+</body>
+<script src="./js/vue.js"></script>
+<script src="./js/jQuery-2.1.4.min.js"></script>
+<script>
+    // 全局过滤器
+    // Vue.filter('msgFilter', function (val) {
+    //     return val.charAt(0).toUpperCase() + val.slice(1);
+    // })
+    var vm = new Vue({
+        el: '#vueInside',
+        data() {
+            return {
+                msg: '',
+            }
+        },
+        methods: {
+
+        },
+        filters: {
+            msgFilter: function (val) {
+                return val.charAt(0).toUpperCase() + val.slice(1);
+            }
+        }
+    })
+</script>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>具名插槽</title>
+    <style>
+        .current {
+            color: orange;
+        }
+    </style>
+</head>
+
+<body>
+    <div id=vueinside>
+        <div-c :shu='foods'>
+            <template slot-scope='slotShu'>
+                <!-- {{slotShu}} -->
+                <!-- {{slotShu.info}} -->
+
+                <span v-if='slotShu.info.id==1' class="current">
+                    {{slotShu.info.name}}
+                </span>
+                <span v-else>
+                    {{slotShu.info.name}}
+                </span>
+            </template>
+        </div-c>
+    </div>
+</body>
+<script src="./js/vue.js"></script>
+<script>
+    Vue.component('divC', {
+        props:['shu'],
+        // 插槽定义
+        template: `
+        <div>
+        <li v-for='item in shu' :key='item.id'>
+            <!-- :info就是自定义属性 -->
+            <slot :info='item'>
+                {{item.name}}
+            </slot>
+        </li>
+        </div>
+        `
+    })
+    var vueshili = new Vue({
+        el: '#vueinside',
+        data() {
+            return {
+                foods: [{
+                    id: 0,
+                    name: 'apple'
+                }, {
+                    id: 1,
+                    name: 'pear'
+                }, {
+                    id: 2,
+                    name: 'orange'
+                }]
+            }
+        },
+    })
+</script>
+
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    var p=new Promise((resolve,reject)=>{
+        // 成功调用resolve 失败调用reject
+    })
+    p.then(data=>{
+        // 操作resolve的数据
+    },error=>{
+        // 操作reject得到的错误信息
+    }).finally(data=>{
+        // 操作不管成功或者失败得到的信息
+    })
+    // 第二种写法
+    p.then(data=>{
+
+    })
+    .catch(err=>{})
+    .finally(data=>{})
+
+    fetch(url).then(function(data){
+        // text()方法属于fatchAPI的一部分，返回一个Promise实例对象，用于获取后台返回的数据
+        return data.text();
+    }).then(data=>{
+        console.log(data);
+    })
+
+    fetch(url,{
+        method:'post',
+        body:JSON.stringify({
+            uname:'carlos',pwd:'123'
+        }),
+        headers:{
+            'Content-Type':'application/json'
+        }
+    })
+    .then(data=>data.text())
+    .then(data=>console.log(data))
+    // 第二种写法 JSON格式 前提后台接口必须支持JSON格式 
+</script>
+</html>

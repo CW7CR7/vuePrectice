@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .clearfix:after {
+            /*伪元素是行内元素 正常浏览器清除浮动方法*/
+            content: "";
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+
+        .clearfix {
+            *zoom: 1;
+            /*ie6清除浮动的方式 *号只有IE6-IE7执行，其他浏览器不执行*/
+        }
+
+        .goodsContainer>div,
+        .goodsContainer>button {
+            float: left;
+            width: 100px;
+            text-align: center;
+            font-size: 20px;
+            margin-left: 20px;
+        }
+
+        .goodsContainer>button,
+        .goodsContainer input {
+            text-align: center;
+            width: 35px;
+        }
+
+        .goodsContainer>button.delBtn {
+            width: 80px;
+        }
+
+        li {
+            list-style: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- <div class="container">
+        <div class="title">
+            <h1>我的商品</h1>
+        </div>
+        <div class="main">
+            <ul>
+                <li class="clearfix goodsContainer">
+                    <div>小米手机</div>
+                    <button>-</button>
+                    <div>0</div>
+                    <button>+</button>
+                    <button class="delBtn">删除</button>
+                </li>
+            </ul>
+        </div>
+        <div class="total"><h3>总共0个</h3></div>
+    </div> -->
+
+    <div id="vueinside">
+        <my-cart></my-cart>
+    </div>
+</body>
+<script src="./js/vue.js"></script>
+<script>
+    // 标题组件
+    var cartTitle = {
+        props: ['username'],
+        template: `<div class="title">
+            <h1>{{username}}的商品</h1>
+        </div>`
+    }
+    // 内容组件
+    var cartMain = {
+        props: ['goodslist'],
+        template: `
+        <div class="main">
+            <ul>
+                <li class="clearfix goodsContainer"  v-for='item in goodslist' :key='item.id'>
+                    <div>{{item.name}}</div>
+                    <a href='' class='sub' @click.prevent="sub(item.id)">-</a>
+                    <!-- 操作要在大组件里面操作而不是小组件 -->
+                    <div><input  @blur='sonChange(item.id,$event)' :value='item.num' type='number'/></div>
+                    <a href='' class='add' @click.prevent="add(item.id)">+</a>
+                    <button class="delBtn" @click='sonDel(item.id)'>删除</button>
+                </li>
+            </ul>
+        </div>
+        `,
+        methods: {
+            sonDel: function (id) {
+                this.$emit('faDel', id)
+            },
+            // 这里需要传递两个值
+            sonChange(id, event) {
+                this.$emit('faChange', {
+                    id,
+                    num: event.target.value,
+                    type: 'change'
+                })
+            },
+            add(id) {
+                this.$emit('faChange', {
+                    id,
+                    type: 'add'
+                })
+            },
+            sub(id) {
+                this.$emit('faChange', {
+                    id,
+                    type: 'sub'
+                })
+            },
+        },
+    }
+    // 总数组件
+    var cartTotal = {
+        props: ['totalNum'],
+        template: `
+        <div class="total"><h3>总共{{totalNum}}元</h3></div>`
+    }
+
+    // 大组件
+    Vue.component('my-cart', {
+        data() {
+            return {
+                faUsername: 'carlos',
+                faGoodsList: [{
+                    id: 0,
+                    name: '小米手机',
+                    num: 2,
+                    price: 3999
+
+                }, {
+                    id: 1,
+                    name: '苹果手机',
+                    num: 1,
+                    price: 4999
+                }],
+            }
+        },
+        computed: {
+            fuTotalNum: function () {
+                var t = 0;
+                this.faGoodsList.forEach(element => {
+                    t += element.num * element.price
+                });
+                return t;
+            }
+        },
+        // 大模板里面的小模板
+        template: `
+        <div class='my-cart'>
+            <cart-title :username='faUsername'></cart-title>
+
+            <cart-main :goodslist='faGoodsList'
+            @faDel='faDelJu($event)'
+            @faChange='faChangeJu($event)'>
+            </cart-main>
+
+            <cart-total :totalNum='fuTotalNum'></cart-total>
+        </div>
+        `,
+        // 具体的操作必须在大组件里面操作
+        methods: {
+            faDelJu: function (id) {
+                var thisIndex = this.faGoodsList.findIndex(item =>
+                    id == item.id
+                )
+                this.faGoodsList.splice(thisIndex, 1)
+            },
+            faChangeJu: function (val) {
+                console.log(val);
+                if (val.type == 'change') {
+                    // 找到对应的数据
+                    this.faGoodsList.some(item => {
+                        if (item.id == val.id) {
+                            item.num = val.num;
+                            return true;
+                        }
+                    })
+                } else if (val.type == 'add') {
+                    this.faGoodsList.some(item => {
+                        if (item.id == val.id) {
+                            item.num+=1 ;
+                            return true;
+                        }
+                    })
+                }else{
+                    this.faGoodsList.some(item => {
+                        if (item.id == val.id) {
+                            item.num-- ;
+                            return true;
+                        }
+                    })
+                }
+            },
+        },
+        // 包含的二级组件s
+        components: {
+            'cart-title': cartTitle,
+            'cart-main': cartMain,
+            'cart-total': cartTotal,
+        }
+    })
+
+    var vueshili = new Vue({
+        el: '#vueinside',
+        data() {
+            return {
+
+            }
+        },
+    })
+</script>
+
+</html>

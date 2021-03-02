@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="vueinside">
+        <bro1 @click='fun'></bro1>
+        <bro2 @click='fun'></bro2>
+    </div>
+</body>
+<script src="./js/vue.js"></script>
+<script>
+    var gonggong = new Vue();
+    Vue.component('bro1', {
+        data() {
+            return {
+                num: 0,
+            }
+        },
+        template: `
+        <div>
+            <button @click='fun'>字体大小bro1-----{{num}}</button>
+            </div>`,
+
+        methods: {
+            fun: function () {
+                // 触发兄弟组件的事件
+                gonggong.$emit('fun2', 1)
+            }
+        },
+        mounted() {
+            // dom元素渲染完毕进行这一步 接受兄弟组件的操作函数
+            gonggong.$on('fun1', (val) => {
+                this.num += val
+            })
+        },
+    })
+
+    Vue.component('bro2', {
+        data() {
+            return {
+                num: 0,
+            }
+        },
+        template: `
+        <div>
+            <button @click='fun'>字体大小bro2-----{{num}}</button>
+            </div>`,
+        methods: {
+            fun: function () {
+                gonggong.$emit('fun1', 3)
+            }
+        },
+        mounted() {
+            gonggong.$on('fun2', (val) => {
+                this.num += val
+            })
+        },
+    })
+    var vueShili = new Vue({
+        el: '#vueinside',
+        data() {
+            return {
+
+            }
+        },
+    })
+</script>
+
+</html>

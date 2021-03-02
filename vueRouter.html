@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="vueInside">
+        <router-link to="/user">user</router-link>
+        <router-link to="/register">register</router-link>
+        <router-view></router-view>
+    </div>
+</body>
+<script src="./js/vue.js"></script>
+<script src="./js/vue-router_3.0.2.js"></script>
+<script>
+    var User={
+        template:`<p>user</p>`
+    }
+    var Register={
+        template:`<p>register</p>`
+    }
+    var thisRouter= new VueRouter({
+        
+    })
+    var vueShili=new Vue({
+        el:'#vueInside'
+    })
+</script>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+<div id="vueInside">
+    <div :key='index' v-for='(item,index) in arr'>{{item}}</div>
+</div>
+</body>
+<script src="./js/vue.js"></script>
+<script>
+    var vueShili = new Vue({
+        el: '#vueInside',
+        data() {
+            return {
+                // arr: [{name:'apple'}, {name:'orange'}],
+                arr: ['apple', 'orange','banana',],
+                info: {
+                    name: 'mike', gender: 'male',
+                },
+            }
+        },
+    })
+    Vue.set(vueShili.arr,1,'lemon')
+</script>
+
+</html>

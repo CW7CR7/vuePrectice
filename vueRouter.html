@@ -1,32 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     <div id="vueInside">
-        <router-link to="/user">user</router-link>
-        <router-link to="/register">register</router-link>
-        <router-view></router-view>
+      <!-- 类似于a标签 -->
+      <router-link to="/user">user</router-link>
+      <router-link to="/register">register</router-link>
+      <!-- router-view是占位符，router-link匹配到后，展示router-view里面的内容 -->
+      <!--  -->
+      <router-view></router-view>
     </div>
-</body>
-<script src="./js/vue.js"></script>
-<script src="./js/vue-router_3.0.2.js"></script>
-<script>
-    var User={
-        template:`<p>user</p>`
-    }
-    var Register={
-        template:`<p>register</p>`
-    }
-    var thisRouter= new VueRouter({
-        
-    })
-    var vueShili=new Vue({
-        el:'#vueInside'
-    })
-</script>
+  </body>
+  <script src="./js/vue.js"></script>
+  <script src="./js/vue-router_3.0.2.js"></script>
+  <script>
+    const User = {
+      template: `<p>user</p>`,
+    };
+    const Kid1 = {
+      template: `<p>kid1</p>`,
+    };
+    const Kid2 = {
+      template: `<p>kid2</p>`,
+    };
+    const UserUid = {
+      template: `<p>kidUID是{{$route.params.uid}}</p>`,
+    };
+    const UserPid = {
+      props: ["pid", "name", "age"],
+      template: `<div>
+        <p>kidPID是{{pid}}</p>
+        <p>名：{{name}}</p>
+        <p>岁：{{age}}</p>
+        </div>`,
+    };
+    const UserNid = {
+      props: ["nid", "name", "age"],
+      template: `<div>
+        <p>kidnID是{{nid}}</p>
+        <p>名：{{name}}</p>
+        <p>岁：{{age}}</p>
+        </div>`,
+    };
+
+    const Register = {
+      template: `<div>
+        <p>register</p>
+        <!-- // 这种开头没有/就是相对路径，没有注释的就是绝对路径的url地址 -->
+        <!-- <router-link to='register/kid1'>kid1</router-link> -->
+        <!-- <router-link to='register/kid2'>kid2</router-link> -->
+        <router-link to='/register/kid1'>kid1</router-link>
+        <router-link to='/register/kid2'>kid2</router-link>
+        <router-link to='/register/kid/1'>kidUID</router-link>
+        <router-link to='/register/pid/1'>kidPID</router-link>
+      <!-- 命名路由根据name直接找匹配的，必须加: -->
+        <router-link :to="{name:'nid',params:{nid:88}}">nid</router-link>
+      <router-view></router-view>
+        </div>`,
+    };
+
+    // vuerouter实例
+    var thisRouter = new VueRouter({
+      routes: [
+        {
+          // 路由重定向 比如/访问 路径会自动变成/user 路径不区分大小写
+          path: "/",
+          redirect: "/User",
+        },
+        {
+          // routes数组里path和component是必须参数
+          path: "/user",
+          component: User,
+        },
+        {
+          path: "/register",
+          component: Register,
+          //路由数组 路由嵌套
+          children: [
+            {
+              path: "/register/kid1",
+              component: Kid1,
+            },
+            {
+              path: "/register/kid2",
+              component: Kid2,
+            },
+            {
+              path: "/register/kid/:uid",
+              component: UserUid,
+            },
+            {
+              //   第一种props方式 开启路由传参
+              //   props:true,
+              //   箭头函数没有花括号就相当于return
+              props: (route) => ({
+                pid: route.params.pid,
+                name: "carlos",
+                age: 7,
+              }),
+              path: "/register/pid/:pid",
+              component: UserPid,
+            },
+            {
+              props: (route) => ({
+                nid: route.params.nid,
+                name: "carlos2",
+                age: 8,
+              }),
+              path: "/register/nid/:nid",
+              name:'nid',
+              component: UserNid,
+            },
+          ],
+        },
+      ],
+    });
+    // vue实例对象
+    var vueShili = new Vue({
+      el: "#vueInside",
+      // 路由必须要挂载到vue实例中才能使用
+      router: thisRouter,
+    });
+  </script>
 </html>
